@@ -38,6 +38,10 @@ to quickly create a Cobra application.`,
 		if err := initialize.InitMysql(); err != nil {
 			panic(err)
 		}
+		//初始化管理员
+		if err := initialize.Admin(); err != nil {
+			panic(err)
+		}
 		//	初始化redis
 		if conf.HttpConfig.OpenRedis {
 			if err := initialize.InitRedis(); err != nil {
@@ -45,7 +49,9 @@ to quickly create a Cobra application.`,
 			}
 		}
 		//	启动http服务
-		srv := serve.StartHttp()
+		srv, router := serve.StartHttp()
+		//路由
+		initialize.Router(router)
 		quit := make(chan os.Signal)
 		signal.Notify(quit, os.Interrupt)
 		<-quit

@@ -10,7 +10,7 @@ import (
 )
 
 // StartHttp gin优雅重启
-func StartHttp() *http.Server {
+func StartHttp() (*http.Server, *gin.Engine) {
 	router := gin.Default()
 	conf := config.GetConfig()
 	srv := &http.Server{
@@ -23,5 +23,6 @@ func StartHttp() *http.Server {
 			logrus.Fatalf("listen: %s\n", err)
 		}
 	})
-	return srv
+	fmt.Println(fmt.Sprintf("启动成功，监听端口：%d", conf.HttpConfig.Port))
+	return srv, router
 }

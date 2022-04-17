@@ -22,7 +22,8 @@ type Redis struct {
 }
 
 type Jwt struct {
-	Key string `json:"key"`
+	Key        string `json:"key"`
+	ExpireTime int64  `json:"expireTime"`
 }
 
 type Log struct {
@@ -40,7 +41,7 @@ type Config struct {
 	Jwt        Jwt        `json:"jwt"`
 	Log        Log        `json:"log"`
 	OpenCache  bool       `json:"openCache"`
-	HostName   string     `json:"hostName"`
+	Salt       string     `json:"salt"` //加密盐
 }
 
 var config Config

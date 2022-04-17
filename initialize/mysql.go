@@ -3,12 +3,9 @@ package initialize
 import (
 	"admin-cli/config"
 	"admin-cli/global"
-	"context"
+	"admin-cli/model"
 	"fmt"
-	"github.com/fsnotify/fsnotify"
-	"github.com/go-redis/redis/v8"
 	"github.com/sirupsen/logrus"
-	"github.com/spf13/viper"
 	"gopkg.in/natefinch/lumberjack.v2"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -19,55 +16,6 @@ import (
 	"os"
 	"time"
 )
-
-// InitConfig 初始化config
-func InitConfig() error {
-	viper.AddConfigPath("./config/")
-	viper.SetConfigName("config")
-	viper.SetConfigType("yaml")
-	err := viper.ReadInConfig()
-	if err != nil {
-		logrus.Error("配置文件读取err", err)
-		return err
-	}
-	var configData config.Config
-	if err = viper.Unmarshal(&configData); err != nil {
-		logrus.Error("配置文件 Unmarshal err", err)
-		return err
-	}
-	viper.WatchConfig()
-	viper.OnConfigChange(func(in fsnotify.Event) {
-		logrus.Info("配置文件发生更新")
-		if err := viper.Unmarshal(&configData); err != nil {
-			logrus.Infof("配置文件更新解析失败,err:%v", err)
-		}
-	})
-	config.SetConfig(&configData)
-	return nil
-}
-
-// InitLog 初始化日志配置
-func InitLog() {
-	logrus.SetFormatter(&logrus.JSONFormatter{})
-	logrus.SetReportCaller(true)
-	logrus.SetLevel(logrus.InfoLevel)
-	cfg := config.GetConfig()
-	path := "./" + cfg.Log.Path + "/log.log"
-	logger := &lumberjack.Logger{
-		LocalTime:  true,
-		Filename:   path,
-		MaxSize:    cfg.Log.Maxsize, // megabytes
-		MaxBackups: cfg.Log.MaxBackups,
-		MaxAge:     cfg.Log.MaxAge,   //days
-		Compress:   cfg.Log.Compress, // disabled by default
-	}
-	writers := []io.Writer{
-		logger,
-		os.Stdout,
-	}
-	fileAndStdoutWriter := io.MultiWriter(writers...)
-	logrus.SetOutput(fileAndStdoutWriter)
-}
 
 // InitMysql 初始化数据库
 func InitMysql() error {
@@ -129,29 +77,15 @@ func InitMysql() error {
 	// SetConnMaxLifetime 设置了连接可复用的最大时间。
 	sqlDB.SetConnMaxLifetime(1 * time.Hour)
 
-	err = Db.AutoMigrate()
+	err = Db.AutoMigrate(
+		&model.User{},
+		&model.RoleAuthority{},
+		&model.SysBaseMenu{},
+	)
 	if err != nil {
 		logrus.Errorf("MYSQL AutoMigrate error %v", err)
 		return err
 	}
 	global.Db = Db
-	return nil
-}
-
-//初始化redis
-func InitRedis() error {
-	configData := config.GetConfig()
-	redisConfig := &redis.Options{
-		Addr:     fmt.Sprintf("%s:%s", configData.Redis.Host, configData.Redis.Port),
-		Password: configData.Redis.Password,
-		DB:       configData.Redis.DB,
-	}
-	client := redis.NewClient(redisConfig)
-	_, err := client.Ping(context.Background()).Result()
-	if err != nil {
-		logrus.Errorf("redis connect error %v", err)
-		return err
-	}
-	global.Redis = client
 	return nil
 }
