@@ -1,0 +1,21 @@
+mysql:
+ host: 127.0.0.1
+  port: "3306"
+  userName: "root"
+  password: "123456"
+  database: "bee_store"
+  logoMode: true
+
+jwt:
+  key: "12334"
+
+log:
+  path: log
+  maxsize: 10
+  maxBackups: 10
+  maxAge: 10
+  compress: true
+
+openCache: false
+
+hostName: "http://localhost:8080/"
