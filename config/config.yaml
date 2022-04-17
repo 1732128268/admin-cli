@@ -1,10 +1,20 @@
+httpConfig:
+  port: 8089
+  openRedis: true
+
 mysql:
- host: 127.0.0.1
+  host: 127.0.0.1
   port: "3306"
   userName: "root"
   password: "123456"
-  database: "bee_store"
+  database: "admin"
   logoMode: true
+
+redis:
+  host: 127.0.0.1
+  port: 6379
+  password:
+  db: 0
 
 jwt:
   key: "12334"

@@ -5,9 +5,15 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"fmt"
-
+	"admin-cli/config"
+	"admin-cli/initialize"
+	"admin-cli/serve"
+	"context"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
+	"os"
+	"os/signal"
+	"time"
 )
 
 // serveCmd represents the serve command
@@ -21,7 +27,36 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("serve called")
+		//	初始化配置
+		if err := initialize.InitConfig(); err != nil {
+			panic(err)
+		}
+		conf := config.GetConfig()
+		//	初始化日志
+		initialize.InitLog()
+		//	连接Mysql数据库
+		if err := initialize.InitMysql(); err != nil {
+			panic(err)
+		}
+		//	初始化redis
+		if conf.HttpConfig.OpenRedis {
+			if err := initialize.InitRedis(); err != nil {
+				panic(err)
+			}
+		}
+		//	启动http服务
+		srv := serve.StartHttp()
+		quit := make(chan os.Signal)
+		signal.Notify(quit, os.Interrupt)
+		<-quit
+		logrus.Println("Shutdown Server ...")
+
+		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+		defer cancel()
+		if err := srv.Shutdown(ctx); err != nil {
+			logrus.Fatal("Server Shutdown:", err)
+		}
+		logrus.Println("Server exiting")
 	},
 }
 

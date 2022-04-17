@@ -1,12 +1,24 @@
 package config
 
-type MysqlConf struct {
+type HttpConfig struct {
+	Port      int  `json:"port"`
+	OpenRedis bool `json:"openRedis"` //是否开启redis
+}
+
+type Mysql struct {
 	Host     string `json:"host"`
 	Port     string `json:"port"`
 	UserName string `json:"userName"`
 	Password string `json:"password"`
 	DataBase string `json:"database"`
 	LogoMode bool   `json:"logoMode"`
+}
+
+type Redis struct {
+	Host     string `json:"host"`
+	Port     string `json:"port"`
+	Password string `json:"password"`
+	DB       int    `json:"db"`
 }
 
 type Jwt struct {
@@ -22,11 +34,13 @@ type Log struct {
 }
 
 type Config struct {
-	Mysql     MysqlConf `json:"mysql"`
-	Jwt       Jwt       `json:"jwt"`
-	Log       Log       `json:"log"`
-	OpenCache bool      `json:"openCache"`
-	HostName  string    `json:"hostName"`
+	HttpConfig HttpConfig `json:"httpConfig"`
+	Redis      Redis      `json:"redis"`
+	Mysql      Mysql      `json:"mysql"`
+	Jwt        Jwt        `json:"jwt"`
+	Log        Log        `json:"log"`
+	OpenCache  bool       `json:"openCache"`
+	HostName   string     `json:"hostName"`
 }
 
 var config Config
