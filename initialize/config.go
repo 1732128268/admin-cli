@@ -2,6 +2,7 @@ package initialize
 
 import (
 	"admin-cli/config"
+	"admin-cli/global"
 	"github.com/fsnotify/fsnotify"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
@@ -30,5 +31,6 @@ func InitConfig() error {
 		}
 	})
 	config.SetConfig(&configData)
+	global.Config = configData
 	return nil
 }

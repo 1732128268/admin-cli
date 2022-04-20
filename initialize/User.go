@@ -24,7 +24,7 @@ func Admin() error {
 	user = model.User{
 		UUID:        utils.GetUid(),
 		Username:    "admin",
-		Password:    "313233343536d41d8cd98f00b204e9800998ecf8427e",
+		Password:    "313233343536313233343536373839d41d8cd98f00b204e9800998ecf8427e",
 		NickName:    "超级管理员",
 		AuthorityId: "888",
 		Phone:       "17611111111",

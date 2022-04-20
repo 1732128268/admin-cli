@@ -1,7 +1,6 @@
 package initialize
 
 import (
-	"admin-cli/config"
 	"admin-cli/global"
 	"context"
 	"fmt"
@@ -11,11 +10,10 @@ import (
 
 // InitRedis 初始化redis
 func InitRedis() error {
-	configData := config.GetConfig()
 	redisConfig := &redis.Options{
-		Addr:     fmt.Sprintf("%s:%s", configData.Redis.Host, configData.Redis.Port),
-		Password: configData.Redis.Password,
-		DB:       configData.Redis.DB,
+		Addr:     fmt.Sprintf("%s:%s", global.Config.Redis.Host, global.Config.Redis.Port),
+		Password: global.Config.Redis.Password,
+		DB:       global.Config.Redis.DB,
 	}
 	client := redis.NewClient(redisConfig)
 	_, err := client.Ping(context.Background()).Result()

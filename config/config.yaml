@@ -1,6 +1,8 @@
 httpConfig:
   port: 8089
+  mode: debug
   openRedis: true
+  openCaptcha: true
 
 mysql:
   host: 127.0.0.1
@@ -32,3 +34,11 @@ openCache: false
 hostName: "http://localhost:8080/"
 
 salt: "123456789"
+
+captcha:
+  key-long: 6
+  img-width: 240
+  img-height: 80
+
+casbin:
+  model-path: ./global/model.conf

@@ -2,6 +2,7 @@ package serve
 
 import (
 	"admin-cli/config"
+	"admin-cli/global"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
@@ -11,6 +12,9 @@ import (
 
 // StartHttp gin优雅重启
 func StartHttp() (*http.Server, *gin.Engine) {
+	//设置模式
+	gin.SetMode(global.Config.HttpConfig.Mode)
+	//初始化gin
 	router := gin.Default()
 	conf := config.GetConfig()
 	srv := &http.Server{

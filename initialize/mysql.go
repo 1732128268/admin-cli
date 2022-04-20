@@ -1,7 +1,6 @@
 package initialize
 
 import (
-	"admin-cli/config"
 	"admin-cli/global"
 	"admin-cli/model"
 	"fmt"
@@ -20,23 +19,21 @@ import (
 // InitMysql 初始化数据库
 func InitMysql() error {
 
-	configData := config.GetConfig()
-
 	dataSource := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=true&loc=Local",
-		configData.Mysql.UserName,
-		configData.Mysql.Password,
-		configData.Mysql.Host,
-		configData.Mysql.Port,
-		configData.Mysql.DataBase,
+		global.Config.Mysql.UserName,
+		global.Config.Mysql.Password,
+		global.Config.Mysql.Host,
+		global.Config.Mysql.Port,
+		global.Config.Mysql.DataBase,
 	)
-	path := "./" + configData.Log.Path + "/mysql.log"
+	path := "./" + global.Config.Log.Path + "/mysql.log"
 	sqlLogger := &lumberjack.Logger{
 		LocalTime:  true,
 		Filename:   path,
-		MaxSize:    configData.Log.Maxsize, // megabytes
-		MaxBackups: configData.Log.MaxBackups,
-		MaxAge:     configData.Log.MaxAge,   //days
-		Compress:   configData.Log.Compress, // disabled by default
+		MaxSize:    global.Config.Log.Maxsize, // megabytes
+		MaxBackups: global.Config.Log.MaxBackups,
+		MaxAge:     global.Config.Log.MaxAge,   //days
+		Compress:   global.Config.Log.Compress, // disabled by default
 	}
 	writers := []io.Writer{
 		sqlLogger,

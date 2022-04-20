@@ -10,7 +10,6 @@ func UserRouter(group *gin.RouterGroup) {
 	UserRouter := group.Group("user")
 	UserRouter.Use(middleware.Auth())
 	{
-		UserRouter.POST("/login", system.Login)
-		UserRouter.POST("/register", system.Register)
+		UserRouter.POST("/register", system.Register) // 注册
 	}
 }

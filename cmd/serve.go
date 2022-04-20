@@ -5,7 +5,7 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"admin-cli/config"
+	"admin-cli/global"
 	"admin-cli/initialize"
 	"admin-cli/serve"
 	"context"
@@ -31,7 +31,6 @@ to quickly create a Cobra application.`,
 		if err := initialize.InitConfig(); err != nil {
 			panic(err)
 		}
-		conf := config.GetConfig()
 		//	初始化日志
 		initialize.InitLog()
 		//	连接Mysql数据库
@@ -43,7 +42,7 @@ to quickly create a Cobra application.`,
 			panic(err)
 		}
 		//	初始化redis
-		if conf.HttpConfig.OpenRedis {
+		if global.Config.HttpConfig.OpenRedis {
 			if err := initialize.InitRedis(); err != nil {
 				panic(err)
 			}

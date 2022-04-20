@@ -1,6 +1,7 @@
 package global
 
 import (
+	"admin-cli/config"
 	"admin-cli/vaildator"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
@@ -10,8 +11,9 @@ import (
 )
 
 var (
-	Db    *gorm.DB
-	Redis *redis.Client
+	Db     *gorm.DB
+	Redis  *redis.Client
+	Config config.Config
 )
 
 const (
