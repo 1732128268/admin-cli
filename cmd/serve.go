@@ -38,9 +38,9 @@ to quickly create a Cobra application.`,
 			panic(err)
 		}
 		//初始化管理员
-		if err := initialize.Admin(); err != nil {
-			panic(err)
-		}
+		//if err := initialize.Admin(); err != nil {
+		//	panic(err)
+		//}
 		//	初始化redis
 		if global.Config.HttpConfig.OpenRedis {
 			if err := initialize.InitRedis(); err != nil {

@@ -1,20 +1,17 @@
 package utils
 
 import (
-	"admin-cli/config"
 	"crypto/md5"
 	"encoding/hex"
 )
 
 func GenMd5(src string) string {
-	conf := config.GetConfig()
-	srcBytes := []byte(src + conf.Salt)
+	srcBytes := []byte(src)
 
 	md5New := md5.New()
 
-	md5Bytes := md5New.Sum(srcBytes)
+	md5New.Write(srcBytes)
 
-	md5String := hex.EncodeToString(md5Bytes)
+	md5String := hex.EncodeToString(md5New.Sum(nil))
 	return md5String
-
 }

@@ -1,10 +1,15 @@
 package model
 
-import "gorm.io/gorm"
+import (
+	"gorm.io/gorm"
+	"time"
+)
 
 // RoleAuthority 角色表
 type RoleAuthority struct {
-	gorm.Model
+	CreatedAt   time.Time       // 创建时间
+	UpdatedAt   time.Time       // 更新时间
+	DeletedAt   *time.Time      `sql:"index"`
 	AuthorityId string          `json:"authorityId" gorm:"not null;unique;primary_key;comment:角色ID;size:90"` // 角色ID
 	Name        string          `gorm:"type:varchar(100);" json:"name"`                                      //角色名称
 	ParentId    string          `json:"parentId" gorm:"comment:父角色ID"`                                       // 父角色ID

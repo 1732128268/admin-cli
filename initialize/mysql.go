@@ -4,6 +4,7 @@ import (
 	"admin-cli/global"
 	"admin-cli/model"
 	"fmt"
+	adapter "github.com/casbin/gorm-adapter/v3"
 	"github.com/sirupsen/logrus"
 	"gopkg.in/natefinch/lumberjack.v2"
 	"gorm.io/driver/mysql"
@@ -78,6 +79,7 @@ func InitMysql() error {
 		&model.User{},
 		&model.RoleAuthority{},
 		&model.SysBaseMenu{},
+		&adapter.CasbinRule{},
 	)
 	if err != nil {
 		logrus.Errorf("MYSQL AutoMigrate error %v", err)

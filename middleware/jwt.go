@@ -8,22 +8,23 @@ import (
 	"strings"
 )
 
+func GetClaims(c *gin.Context) (*utils.AuthClaims, error) {
+	authHeader := c.Request.Header.Get("Authorization")
+	if authHeader == "" {
+		return nil, errors.New("请携带token")
+	}
+	// 按空格分割
+	parts := strings.SplitN(authHeader, " ", 2)
+	if !(len(parts) == 2 && parts[0] == "Bearer") {
+		return nil, errors.New("请求头中auth格式有误")
+	}
+	jwt, err := utils.ParseToken(parts[1])
+	return jwt, err
+}
+
 func Auth() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		authHeader := c.Request.Header.Get("Authorization")
-		if authHeader == "" {
-			global.Response(c, "", errors.New("请携带token"))
-			c.Abort()
-			return
-		}
-		// 按空格分割
-		parts := strings.SplitN(authHeader, " ", 2)
-		if !(len(parts) == 2 && parts[0] == "Bearer") {
-			global.Response(c, "", errors.New("请求头中auth格式有误"))
-			c.Abort()
-			return
-		}
-		jwt, err := utils.ParseToken(parts[1])
+		jwt, err := GetClaims(c)
 		if err != nil {
 			global.Response(c, "", err)
 			c.Abort()

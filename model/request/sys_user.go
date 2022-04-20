@@ -12,6 +12,8 @@ type Register struct {
 	Password     string   `json:"passWord"`
 	NickName     string   `json:"nickName"`
 	HeaderImg    string   `json:"headerImg"`
+	Phone        string   `json:"phone"` // 用户手机号
+	Email        string   `json:"email"`
 	AuthorityId  string   `json:"authorityId"`
 	AuthorityIds []string `json:"authorityIds"`
 }

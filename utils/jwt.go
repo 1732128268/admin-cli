@@ -6,14 +6,14 @@ import (
 )
 
 type AuthClaims struct {
-	Id     uint   `json:"id"`
-	Name   string `json:"name"`
-	RoleId string `json:"role_id"`
+	Id     uint     `json:"id"`
+	Name   string   `json:"name"`
+	RoleId []string `json:"role_id"`
 	jwt.StandardClaims
 }
 
 // GenerateToken 生成token
-func GenerateToken(id uint, roleId, name string) (string, error) {
+func GenerateToken(id uint, name string, roleId []string) (string, error) {
 	cfg := config.GetConfig()
 	//设置token有效时间
 	claims := AuthClaims{

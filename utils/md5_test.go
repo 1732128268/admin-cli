@@ -15,9 +15,9 @@ func TestGenMd5(t *testing.T) {
 		{
 			name: "test",
 			args: args{
-				src: "123456",
+				src: "111111",
 			},
-			want: "313233343536d41d8cd98f00b204e9800998ecf8427e",
+			want: "96e79218965eb72c92a549dd5a330112",
 		},
 	}
 	for _, tt := range tests {
