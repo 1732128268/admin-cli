@@ -22,12 +22,11 @@ func Admin() error {
 		return nil
 	}
 	user = model.User{
-		UUID:        utils.GetUid(),
-		Username:    "admin",
-		Password:    "d41d8cd98f00b204e9800998ecf8427e",
-		NickName:    "超级管理员",
-		AuthorityId: "8888",
-		Phone:       "17611111111",
+		UUID:     utils.GetUid(),
+		Username: "admin",
+		Password: "d41d8cd98f00b204e9800998ecf8427e",
+		NickName: "超级管理员",
+		Phone:    "17611111111",
 	}
 	if err := global.Db.Create(&user).Error; err != nil {
 		return err

@@ -13,8 +13,10 @@ import (
 	"gorm.io/gorm"
 )
 
+type UserServer struct{}
+
 // Login 用户登陆
-func Login(c *gin.Context) {
+func (u *UserServer) Login(c *gin.Context) {
 	var login request.Login
 	if err := c.ShouldBind(&login); err != nil {
 		global.ValidatorResponse(c, err)
@@ -72,7 +74,7 @@ func Login(c *gin.Context) {
 }
 
 // UserList 用户列表
-func UserList(c *gin.Context) {
+func (u *UserServer) UserList(c *gin.Context) {
 	size := c.DefaultQuery("size", "10")      //每页数
 	current := c.DefaultQuery("current", "1") //当前页
 	//总页数
@@ -96,7 +98,7 @@ func UserList(c *gin.Context) {
 }
 
 // Register 用户注册
-func Register(c *gin.Context) {
+func (u *UserServer) Register(c *gin.Context) {
 	var (
 		register request.Register
 	)
@@ -133,7 +135,6 @@ func Register(c *gin.Context) {
 	user.HeaderImg = register.HeaderImg
 	user.Phone = register.Phone
 	user.Email = register.Email
-	user.AuthorityId = register.AuthorityId
 	user.Authorities = authorities
 	if err := global.Db.Create(&user).Error; err != nil {
 		logrus.Errorf("注册用户失败 err:%s", err)
@@ -146,4 +147,162 @@ func Register(c *gin.Context) {
 
 }
 
+// ChangePassword 用户修改密码
+func (u *UserServer) ChangePassword(c *gin.Context) {
+	var user request.ChangePasswordStruct
+	if err := c.ShouldBind(&user); err != nil {
+		logrus.Errorf("ChangePassword ShouldBind data:%v err:%v", user, err)
+		global.ValidatorResponse(c, err)
+		return
+	}
+
+	var userInfo model.User
+	oldPwd := utils.GenMd5(user.Password)
+	newPwd := utils.GenMd5(user.NewPassword)
+	if err := global.Db.Where("username = ?", user.Username).Where("password = ?", oldPwd).First(&userInfo).Update("password", newPwd).Error; err != nil {
+		logrus.Errorf("ChangePassword 修改密码 err:%v", err)
+		global.Response(c, nil, errors.New("修改失败，原密码与当前账户不符"))
+		return
+	}
+	global.Response(c, nil, nil)
+}
+
 //
+func setUserAuthorities(id uint, authorityIds []string) error {
+	return global.Db.Transaction(func(tx *gorm.DB) error {
+		err := tx.Delete(&[]model.SysUseAuthority{}, "user_id = ?", id).Error
+		if err != nil {
+			return err
+		}
+		var useAuthority []model.SysUseAuthority
+		for _, v := range authorityIds {
+			useAuthority = append(useAuthority, model.SysUseAuthority{
+				UserId:                   id,
+				RoleAuthorityAuthorityId: v,
+			})
+		}
+		tx = tx.Create(&useAuthority)
+		if tx.Error != nil {
+			return tx.Error
+		}
+		// 返回 nil 提交事务
+		return nil
+	})
+}
+
+// SetUserAuthorities 设置用户权限
+func (u *UserServer) SetUserAuthorities(c *gin.Context) {
+	var sua request.SetUserAuthorities
+	if err := c.ShouldBind(&sua); err != nil {
+		logrus.Errorf("SetUserAuthorities ShouldBind data:%v err:%v", sua, err)
+		global.ValidatorResponse(c, err)
+		return
+	}
+	err := setUserAuthorities(sua.ID, sua.AuthorityIds)
+	if err != nil {
+		logrus.Errorf("SetUserAuthorities 修改权限 err:%v", err)
+		global.Response(c, nil, err)
+		return
+	}
+	global.Response(c, nil, nil)
+}
+
+// DeleteUser 删除用户
+func (u *UserServer) DeleteUser(c *gin.Context) {
+	var reqId request.GetById
+	if err := c.ShouldBind(&reqId); err != nil {
+		logrus.Errorf("DeleteUser ShouldBind err:%v", err)
+		global.ValidatorResponse(c, err)
+		return
+	}
+	var user model.User
+	err := global.Db.Where("id = ?", reqId.ID).Delete(&user).Error
+	if err != nil {
+		logrus.Errorf("DeleteUser 删除用户 err:%v", err)
+		global.Response(c, nil, err)
+		return
+	}
+	err = global.Db.Delete(&[]model.SysUseAuthority{}, "user_id = ?", reqId.ID).Error
+	if err != nil {
+		logrus.Errorf("DeleteUser 删除用户权限 err:%v", err)
+		global.Response(c, nil, err)
+		return
+	}
+	global.Response(c, nil, nil)
+}
+
+// SetUserInfo 更新用户信息
+func (u *UserServer) SetUserInfo(c *gin.Context) {
+	var info request.ChangeUserInfo
+	if err := c.ShouldBind(&info); err != nil {
+		logrus.Errorf("SetUserInfo ShouldBind data:%v err:%v", info, err)
+		global.ValidatorResponse(c, err)
+		return
+	}
+
+	if len(info.AuthorityIds) != 0 {
+		err := setUserAuthorities(info.ID, info.AuthorityIds)
+		if err != nil {
+			logrus.Errorf("SetUserInfo 修改权限 userId:%v authIds:%v err:%v", info.ID, info.AuthorityIds, err)
+			global.Response(c, nil, err)
+			return
+		}
+	}
+
+	user := model.User{
+		Model:     gorm.Model{ID: info.ID},
+		NickName:  info.NickName,
+		HeaderImg: info.HeaderImg,
+		Phone:     info.Phone,
+		Email:     info.Email,
+	}
+	err := global.Db.Updates(&user).Error
+	if err != nil {
+		logrus.Errorf("SetUserInfo 更新用户信息 err:%v", err)
+		global.Response(c, nil, err)
+		return
+	}
+	global.Response(c, gin.H{
+		"user": user,
+	}, nil)
+
+}
+
+// GetUserInfo 获取用户信息
+func (u *UserServer) GetUserInfo(c *gin.Context) {
+	var reqId request.GetById
+	if err := c.ShouldBind(&reqId); err != nil {
+		logrus.Errorf("GetUserInfo ShouldBind err:%v", err)
+		global.ValidatorResponse(c, err)
+		return
+	}
+	var user model.User
+	err := global.Db.Preload("Authorities").Where("id = ?", reqId.ID).First(&user).Error
+	if err != nil {
+		logrus.Errorf("GetUserInfo 查询用户信息 err:%v", err)
+		global.Response(c, nil, err)
+		return
+	}
+	global.Response(c, gin.H{
+		"user": user,
+	}, nil)
+
+}
+
+// ResetPassword 重置用户密码
+func (u *UserServer) ResetPassword(c *gin.Context) {
+	var reqId request.GetById
+	if err := c.ShouldBind(&reqId); err != nil {
+		logrus.Errorf("GetUserInfo ShouldBind err:%v", err)
+		global.ValidatorResponse(c, err)
+		return
+	}
+	var user model.User
+	err := global.Db.Where("id = ?", reqId.ID).First(&user).Update("password", utils.GenMd5("123456")).Error
+	if err != nil {
+		logrus.Errorf("ResetPassword 重置用户密码 err:%v", err)
+		global.Response(c, nil, err)
+		return
+	}
+	global.Response(c, nil, nil)
+}

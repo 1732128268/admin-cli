@@ -12,6 +12,8 @@ import (
 	"gorm.io/gorm"
 )
 
+type MenuService struct{}
+
 //二级权限菜单
 func findChildrenBaseMenu(baseMenu *model.SysBaseMenu) (err error) {
 	err = global.Db.Where("parent_id = ?", baseMenu.ID).Find(&baseMenu.Children).Error
@@ -24,7 +26,7 @@ func findChildrenBaseMenu(baseMenu *model.SysBaseMenu) (err error) {
 }
 
 // GetBaseMenuList 获取所有权限菜单
-func GetBaseMenuList(c *gin.Context) {
+func (m *MenuService) GetBaseMenuList(c *gin.Context) {
 	size := c.DefaultQuery("size", "10")      //每页数
 	current := c.DefaultQuery("current", "1") //当前页
 	//总页数
@@ -54,7 +56,7 @@ func GetBaseMenuList(c *gin.Context) {
 }
 
 // GetBaseMenuById 根据id获取菜单
-func GetBaseMenuById(c *gin.Context) {
+func (m *MenuService) GetBaseMenuById(c *gin.Context) {
 	var idInfo request.GetById
 	if err := c.ShouldBind(&idInfo); err != nil {
 
@@ -81,7 +83,7 @@ func GetBaseMenuById(c *gin.Context) {
 }
 
 // AddBaseMenu 新增权限菜单
-func AddBaseMenu(c *gin.Context) {
+func (m *MenuService) AddBaseMenu(c *gin.Context) {
 	var (
 		menu model.SysBaseMenu
 		err  error
@@ -116,7 +118,7 @@ func AddBaseMenu(c *gin.Context) {
 }
 
 // DeleteBaseMenu 删除权限菜单
-func DeleteBaseMenu(c *gin.Context) {
+func (m *MenuService) DeleteBaseMenu(c *gin.Context) {
 	var menu request.GetById
 	if err := c.ShouldBind(&menu); err != nil {
 		logrus.Errorf("DeleteBaseMenu ShouldBind err:%v", err)
@@ -151,7 +153,7 @@ func DeleteBaseMenu(c *gin.Context) {
 }
 
 // UpdateBaseMenu 更新权限菜单
-func UpdateBaseMenu(c *gin.Context) {
+func (m *MenuService) UpdateBaseMenu(c *gin.Context) {
 	var menu model.SysBaseMenu
 	if err := c.ShouldBind(&menu); err != nil {
 		logrus.Errorf("UpdateBaseMenu ShouldBind err:%v", err)
@@ -208,7 +210,7 @@ func UpdateBaseMenu(c *gin.Context) {
 }
 
 // AddMenuAuthority 增加menu和角色关联关系
-func AddMenuAuthority(c *gin.Context) {
+func (m *MenuService) AddMenuAuthority(c *gin.Context) {
 	var authorityMenu request.AddMenuAuthorityInfo
 	if err := c.ShouldBind(&authorityMenu); err != nil {
 		logrus.Errorf("AddMenuAuthority ShouldBind err:%v", err)

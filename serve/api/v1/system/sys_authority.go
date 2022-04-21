@@ -12,6 +12,8 @@ import (
 	"gorm.io/gorm/clause"
 )
 
+type AuthorityService struct{}
+
 //查询二级权限
 func findChildrenAuthority(authority *model.RoleAuthority) (err error) {
 	err = global.Db.Where("parent_id = ?", authority.AuthorityId).Find(&authority.Children).Error
@@ -24,7 +26,7 @@ func findChildrenAuthority(authority *model.RoleAuthority) (err error) {
 }
 
 // GetAuthorityList 分页获取角色列表
-func GetAuthorityList(c *gin.Context) {
+func (a *AuthorityService) GetAuthorityList(c *gin.Context) {
 	size := c.DefaultQuery("size", "10")      //每页数
 	current := c.DefaultQuery("current", "1") //当前页
 	//总页数
@@ -65,7 +67,7 @@ func GetAuthorityList(c *gin.Context) {
 }
 
 // CreateAuthority 创建角色
-func CreateAuthority(c *gin.Context) {
+func (a *AuthorityService) CreateAuthority(c *gin.Context) {
 	var (
 		authority model.RoleAuthority
 		err       error
@@ -96,7 +98,7 @@ func CreateAuthority(c *gin.Context) {
 }
 
 // DeleteAuthority 删除角色
-func DeleteAuthority(c *gin.Context) {
+func (a *AuthorityService) DeleteAuthority(c *gin.Context) {
 	var authority model.RoleAuthority
 	if err := c.ShouldBind(&authority); err != nil {
 		logrus.Errorf("删除角色权限 ShouldBind err:%v", err)
@@ -147,7 +149,7 @@ func DeleteAuthority(c *gin.Context) {
 }
 
 // UpdateAuthority 更新角色信息
-func UpdateAuthority(c *gin.Context) {
+func (a *AuthorityService) UpdateAuthority(c *gin.Context) {
 	var auth model.RoleAuthority
 	if err := c.ShouldBind(&auth); err != nil {
 		logrus.Errorf("更新角色信息 ShouldBind err:%v", err)
@@ -167,7 +169,7 @@ func UpdateAuthority(c *gin.Context) {
 }
 
 // GetAuthority 根据id获取当前角色的数据
-func GetAuthority(c *gin.Context) {
+func (a *AuthorityService) GetAuthority(c *gin.Context) {
 	authorityId := c.Query("authority_id")
 	var auth model.RoleAuthority
 	err := global.Db.Preload(clause.Associations).Where("authority_id = ?", authorityId).First(&auth).Error
