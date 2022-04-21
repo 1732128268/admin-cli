@@ -24,6 +24,10 @@ func GetClaims(c *gin.Context) (*utils.AuthClaims, error) {
 
 func Auth() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		if gin.DebugMode == global.Config.HttpConfig.Mode {
+			c.Next()
+			return
+		}
 		jwt, err := GetClaims(c)
 		if err != nil {
 			global.Response(c, "", err)
@@ -33,6 +37,6 @@ func Auth() gin.HandlerFunc {
 		c.Set("id", jwt.Id)
 		c.Set("name", jwt.Name)
 		c.Set("roleId", jwt.RoleId)
-		c.Next()
+
 	}
 }

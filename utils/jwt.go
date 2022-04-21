@@ -3,6 +3,7 @@ package utils
 import (
 	"admin-cli/config"
 	"github.com/dgrijalva/jwt-go"
+	"time"
 )
 
 type AuthClaims struct {
@@ -22,7 +23,7 @@ func GenerateToken(id uint, name string, roleId []string) (string, error) {
 		RoleId: roleId,
 		StandardClaims: jwt.StandardClaims{
 			// 过期时间
-			ExpiresAt: cfg.Jwt.ExpireTime,
+			ExpiresAt: time.Now().Unix() + cfg.Jwt.ExpireTime,
 			// 指定token发行人
 			Issuer: "admin-cli",
 		},

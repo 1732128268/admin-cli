@@ -12,6 +12,10 @@ var casbinService = system.CasbinService{}
 // CasbinHandler 拦截器
 func CasbinHandler() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		if gin.DebugMode == global.Config.HttpConfig.Mode {
+			c.Next()
+			return
+		}
 		waitUse, _ := GetClaims(c)
 
 		// 获取请求的PATH
