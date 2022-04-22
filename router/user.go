@@ -8,7 +8,7 @@ import (
 
 func UserRouter(group *gin.RouterGroup) {
 	userRouter := group.Group("user")
-	userRouter.Use(middleware.Auth())
+	userRouter.Use(middleware.Auth()).Use(middleware.OperationRecord())
 	userServer := system.UserServer{}
 	{
 		userRouter.GET("userList", userServer.UserList)                      // 获取用户列表

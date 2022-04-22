@@ -39,7 +39,7 @@ type SetUserAuthorities struct {
 }
 
 type ChangeUserInfo struct {
-	ID           uint                  `gorm:"primarykey"`   // 主键ID
+	ID           uint                  `json:"id"`           // 主键ID
 	NickName     string                `json:"nickName"`     // 用户昵称
 	Phone        string                `json:"phone"`        // 用户角色ID
 	AuthorityIds []string              `json:"authorityIds"` // 角色ID

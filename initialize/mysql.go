@@ -80,6 +80,7 @@ func InitMysql() error {
 		&model.RoleAuthority{},
 		&model.SysBaseMenu{},
 		&adapter.CasbinRule{},
+		&model.SysOperationRecord{},
 	)
 	if err != nil {
 		logrus.Errorf("MYSQL AutoMigrate error %v", err)

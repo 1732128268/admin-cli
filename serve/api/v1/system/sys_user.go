@@ -256,6 +256,7 @@ func (u *UserServer) SetUserInfo(c *gin.Context) {
 		Phone:     info.Phone,
 		Email:     info.Email,
 	}
+
 	err := global.Db.Updates(&user).Error
 	if err != nil {
 		logrus.Errorf("SetUserInfo 更新用户信息 err:%v", err)
