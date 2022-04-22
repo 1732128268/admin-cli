@@ -28,6 +28,8 @@ func InitConfig() error {
 		logrus.Info("配置文件发生更新")
 		if err := viper.Unmarshal(&configData); err != nil {
 			logrus.Infof("配置文件更新解析失败,err:%v", err)
+		} else {
+			global.Config = configData
 		}
 	})
 	config.SetConfig(&configData)

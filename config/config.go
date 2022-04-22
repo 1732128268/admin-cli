@@ -53,10 +53,9 @@ type Config struct {
 	Mysql      Mysql      `json:"mysql"`
 	Jwt        Jwt        `json:"jwt"`
 	Log        Log        `json:"log"`
-	OpenCache  bool       `json:"openCache"`
 	Salt       string     `json:"salt"` //加密盐
-	Casbin     Casbin     `mapstructure:"casbin" json:"casbin" yaml:"casbin"`
-	Captcha    Captcha    `mapstructure:"captcha" json:"captcha" yaml:"captcha"`
+	Casbin     Casbin     `json:"casbin" yaml:"casbin"`
+	Captcha    Captcha    `json:"captcha" yaml:"captcha"`
 }
 
 var config Config

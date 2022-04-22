@@ -16,12 +16,14 @@ require (
 	github.com/iris-contrib/go.uuid v2.0.0+incompatible
 	github.com/jackc/pgx/v4 v4.15.0 // indirect
 	github.com/mojocn/base64Captcha v1.3.5
-	github.com/pkg/errors v0.9.1
+	github.com/shirou/gopsutil v3.21.11+incompatible
 	github.com/sirupsen/logrus v1.8.1
 	github.com/spf13/cast v1.4.1
 	github.com/spf13/cobra v1.4.0
 	github.com/spf13/viper v1.11.0
+	github.com/tklauser/go-sysconf v0.3.10 // indirect
 	github.com/ugorji/go v1.1.13 // indirect
+	github.com/yusufpapurcu/wmi v1.2.2 // indirect
 	github.com/zeromicro/go-zero v1.3.2
 	golang.org/x/image v0.0.0-20210220032944-ac19c3e999fb // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0

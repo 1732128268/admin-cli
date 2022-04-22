@@ -16,5 +16,6 @@ func Router(r *gin.Engine) {
 	router.MenuRouter(group)               //权限菜单
 	router.CasbinRouter(group)             //casbin获取
 	router.SysOperationRecordRouter(group) //系统操作记录
+	router.SystemRouter(group)             //配置文件修改
 
 }
