@@ -1,6 +1,6 @@
 httpConfig:
   port: 8089
-  mode: debug
+  mode: release
   openRedis: true
   openCaptcha: true
 

@@ -28,12 +28,15 @@ func CasbinHandler() gin.HandlerFunc {
 		for _, v := range waitUse.RoleId {
 			success, _ = e.Enforce(v, obj, act)
 			if success {
-				c.Next()
+				break
 			}
 		}
-		global.Response(c, nil, errors.New("权限不足"))
-		c.Abort()
-		return
-
+		if success {
+			c.Next()
+		} else {
+			global.Response(c, nil, errors.New("权限不足"))
+			c.Abort()
+			return
+		}
 	}
 }

@@ -56,7 +56,7 @@ func (u *UserServer) Login(c *gin.Context) {
 	//权限id
 	var roleIds []string
 	for _, role := range user.Authorities {
-		roleIds = append(roleIds, role.ParentId)
+		roleIds = append(roleIds, role.AuthorityId)
 	}
 	//生成token
 	token, err := utils.GenerateToken(user.ID, user.Username, roleIds)
