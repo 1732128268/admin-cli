@@ -19,7 +19,6 @@ email:
   nickname: test
   port: 465
   is-ssl: true
-hostname: http://localhost:8080/
 httpconfig:
   port: 8089
   mode: debug
