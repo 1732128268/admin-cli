@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"github.com/go-redis/redis/v8"
+	"github.com/juju/ratelimit"
 	"gorm.io/gorm"
 	"net/http"
 )
@@ -14,11 +15,11 @@ var (
 	Db     *gorm.DB
 	Redis  *redis.Client
 	Config config.Config
+	Bucket *ratelimit.Bucket //限流
 )
 
 const (
-	LIKE     = "%%%v%%"
-	CronSpec = "%v %v %v %v *"
+	LIKE = "%%%v%%"
 )
 
 func Response(c *gin.Context, msg interface{}, err error) {

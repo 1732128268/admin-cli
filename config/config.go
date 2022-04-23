@@ -1,11 +1,16 @@
 package config
 
 type HttpConfig struct {
-	Port        int    `json:"port"`
-	Mode        string `json:"mode"`
-	OpenRedis   bool   `json:"openRedis"`                                        //是否开启redis
-	OpenCaptcha bool   `json:"openCaptcha"`                                      //是否开启验证码
-	OssType     string `mapstructure:"oss-type" json:"oss-type" yaml:"oss-type"` // Oss类型
+	Port          int    `json:"port"`
+	Mode          string `json:"mode"`
+	OpenRedis     bool   `json:"openRedis"`   //是否开启redis
+	OpenCaptcha   bool   `json:"openCaptcha"` //是否开启验证码
+	OssType       string ` json:"ossType"`    // Oss类型
+	OpenRatelimit bool   `json:"openRateLimit"`
+}
+
+type Ratelimit struct {
+	Qps int64 `json:"qps"`
 }
 
 type Mysql struct {
@@ -103,15 +108,16 @@ type Config struct {
 	Mysql      Mysql      `json:"mysql"`
 	Jwt        Jwt        `json:"jwt"`
 	Log        Log        `json:"log"`
-	Salt       string     `json:"salt"` //加密盐
+	Salt       string     `json:"salt"`      //加密盐
+	Ratelimit  Ratelimit  `json:"ratelimit"` //限流
 	Casbin     Casbin     `json:"casbin"`
 	Captcha    Captcha    `json:"captcha"`
 	Email      Email      `json:"email"`
 	Local      Local      `json:"local"`
 	Qiniu      Qiniu      ` json:"qiniu"`
-	AliyunOSS  AliyunOSS  `json:"aliyun-oss"`
-	HuaWeiObs  HuaWeiObs  ` json:"hua-wei-obs"`
-	TencentCOS TencentCOS ` json:"tencent-cos"`
+	AliyunOSS  AliyunOSS  `mapstructure:"aliyun-oss" json:"aliyun-oss" yaml:"aliyun-oss"`
+	HuaWeiObs  HuaWeiObs  `mapstructure:"hua-wei-obs" json:"hua-wei-obs" yaml:"hua-wei-obs"`
+	TencentCOS TencentCOS `mapstructure:"tencent-cos" json:"tencent-cos" yaml:"tencent-cos"`
 }
 
 var config Config

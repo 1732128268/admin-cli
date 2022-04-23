@@ -4,8 +4,10 @@ import (
 	"admin-cli/config"
 	"admin-cli/global"
 	"github.com/fsnotify/fsnotify"
+	"github.com/juju/ratelimit"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
+	"time"
 )
 
 // InitConfig 初始化config
@@ -30,9 +32,15 @@ func InitConfig() error {
 			logrus.Infof("配置文件更新解析失败,err:%v", err)
 		} else {
 			global.Config = configData
+			if configData.HttpConfig.OpenRatelimit {
+				global.Bucket = ratelimit.NewBucket(time.Minute, configData.Ratelimit.Qps)
+			}
 		}
 	})
 	config.SetConfig(&configData)
 	global.Config = configData
+	if configData.HttpConfig.OpenRatelimit {
+		global.Bucket = ratelimit.NewBucket(time.Minute, configData.Ratelimit.Qps)
+	}
 	return nil
 }
