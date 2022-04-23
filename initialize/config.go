@@ -33,14 +33,14 @@ func InitConfig() error {
 		} else {
 			global.Config = configData
 			if configData.HttpConfig.OpenRatelimit {
-				global.Bucket = ratelimit.NewBucket(time.Minute, configData.Ratelimit.Qps)
+				global.Bucket = ratelimit.NewBucket(time.Second, configData.Ratelimit.Qps)
 			}
 		}
 	})
 	config.SetConfig(&configData)
 	global.Config = configData
 	if configData.HttpConfig.OpenRatelimit {
-		global.Bucket = ratelimit.NewBucket(time.Minute, configData.Ratelimit.Qps)
+		global.Bucket = ratelimit.NewBucket(time.Second, configData.Ratelimit.Qps)
 	}
 	return nil
 }
