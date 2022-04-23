@@ -3,7 +3,6 @@ package middleware
 import (
 	"admin-cli/global"
 	"errors"
-	"fmt"
 	"github.com/gin-gonic/gin"
 )
 
@@ -14,7 +13,6 @@ func BucketRateLimit() gin.HandlerFunc {
 		if !global.Config.HttpConfig.OpenRatelimit {
 			c.Next()
 		}
-		fmt.Println("BucketRateLimit:", global.Bucket.Available())
 		if global.Bucket.TakeAvailable(1) < 1 {
 			c.Abort()
 			global.Response(c, nil, errors.New("服务器繁忙，请稍后再试"))
