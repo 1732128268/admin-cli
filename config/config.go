@@ -87,6 +87,16 @@ type Local struct {
 	Path string `mapstructure:"path" json:"path" yaml:"path"` // 本地文件路径
 }
 
+type Email struct {
+	To       string `mapstructure:"to" json:"to" yaml:"to"`                   // 收件人:多个以英文逗号分隔 例：a@qq.com b@qq.com 正式开发中请把此项目作为参数使用
+	From     string `mapstructure:"from" json:"from" yaml:"from"`             // 发件人  你自己要发邮件的邮箱
+	Host     string `mapstructure:"host" json:"host" yaml:"host"`             // 服务器地址 例如 smtp.qq.com  请前往QQ或者你要发邮件的邮箱查看其smtp协议
+	Secret   string `mapstructure:"secret" json:"secret" yaml:"secret"`       // 密钥    用于登录的密钥 最好不要用邮箱密码 去邮箱smtp申请一个用于登录的密钥
+	Nickname string `mapstructure:"nickname" json:"nickname" yaml:"nickname"` // 昵称    发件人昵称 通常为自己的邮箱
+	Port     int    `mapstructure:"port" json:"port" yaml:"port"`             // 端口     请前往QQ或者你要发邮件的邮箱查看其smtp协议 大多为 465
+	IsSSL    bool   `mapstructure:"is-ssl" json:"isSSL" yaml:"is-ssl"`        // 是否SSL   是否开启SSL
+}
+
 type Config struct {
 	HttpConfig HttpConfig `json:"httpConfig"`
 	Redis      Redis      `json:"redis"`
@@ -94,13 +104,14 @@ type Config struct {
 	Jwt        Jwt        `json:"jwt"`
 	Log        Log        `json:"log"`
 	Salt       string     `json:"salt"` //加密盐
-	Casbin     Casbin     `json:"casbin" yaml:"casbin"`
-	Captcha    Captcha    `json:"captcha" yaml:"captcha"`
-	Local      Local      `mapstructure:"local" json:"local" yaml:"local"`
-	Qiniu      Qiniu      `mapstructure:"qiniu" json:"qiniu" yaml:"qiniu"`
-	AliyunOSS  AliyunOSS  `mapstructure:"aliyun-oss" json:"aliyun-oss" yaml:"aliyun-oss"`
-	HuaWeiObs  HuaWeiObs  `mapstructure:"hua-wei-obs" json:"hua-wei-obs" yaml:"hua-wei-obs"`
-	TencentCOS TencentCOS `mapstructure:"tencent-cos" json:"tencent-cos" yaml:"tencent-cos"`
+	Casbin     Casbin     `json:"casbin"`
+	Captcha    Captcha    `json:"captcha"`
+	Email      Email      `json:"email"`
+	Local      Local      `json:"local"`
+	Qiniu      Qiniu      ` json:"qiniu"`
+	AliyunOSS  AliyunOSS  `json:"aliyun-oss"`
+	HuaWeiObs  HuaWeiObs  ` json:"hua-wei-obs"`
+	TencentCOS TencentCOS ` json:"tencent-cos"`
 }
 
 var config Config

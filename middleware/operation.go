@@ -21,6 +21,7 @@ func OperationRecord() gin.HandlerFunc {
 		if c.Request.Method != http.MethodGet {
 			var err error
 			body, err = ioutil.ReadAll(c.Request.Body)
+			// 再重新写回请求体body中，ioutil.ReadAll会清空c.Request.Body中的数据
 			if err != nil {
 				logrus.Errorf("read request body error: %v", err)
 			} else {

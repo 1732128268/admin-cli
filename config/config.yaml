@@ -14,7 +14,7 @@ httpconfig:
 jwt:
   key: "12334"
   expiretime: 86400
-  
+
 log:
   path: log
   maxsize: 10
@@ -73,4 +73,11 @@ tencent-cos:
   base-url: https://gin.vue.admin
   path-prefix: github.com/flipped-aurora/gin-vue-admin/server
 
-
+email:
+  to: xxx@qq.com
+  port: 465
+  from: xxx@163.com
+  host: smtp.163.com
+  is-ssl: true
+  secret: xxx
+  nickname: test
