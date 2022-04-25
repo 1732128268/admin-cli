@@ -3,10 +3,12 @@ module admin-cli
 go 1.16
 
 require (
+	github.com/DeanThompson/ginpprof v0.0.0-20201112072838-007b1e56b2e1
 	github.com/aliyun/aliyun-oss-go-sdk v2.2.2+incompatible
 	github.com/baiyubin/aliyun-sts-go-sdk v0.0.0-20180326062324-cfa1a18b161f // indirect
 	github.com/casbin/casbin/v2 v2.44.1
 	github.com/casbin/gorm-adapter/v3 v3.5.1
+	github.com/chenjiandongx/ginprom v0.0.0-20210617023641-6c809602c38a
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/fsnotify/fsnotify v1.5.1
 	github.com/gin-gonic/gin v1.7.7
@@ -33,6 +35,7 @@ require (
 	github.com/ugorji/go v1.1.13 // indirect
 	github.com/yusufpapurcu/wmi v1.2.2 // indirect
 	github.com/zeromicro/go-zero v1.3.2
+	github.com/zsais/go-gin-prometheus v0.1.0
 	golang.org/x/image v0.0.0-20210220032944-ac19c3e999fb // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0
 	gorm.io/driver/mysql v1.2.3

@@ -6,8 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-//令牌捅限流
-
+// BucketRateLimit 令牌捅限流
 func BucketRateLimit() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		if !global.Config.HttpConfig.OpenRatelimit {
